@@ -3,6 +3,8 @@ package {
 	import flash.events.*
 	import flash.geom.*
 
+	import Hexsel;
+
 	public class Hexget extends Sprite {
 		private const speed:uint = 10;
 
@@ -14,7 +16,7 @@ package {
 		private var comb:Sprite = new Sprite();
 
 		private var scale_from:Number;
-		private var scale_to:Number;
+		private var scale_to:Number = 1.0;
 		private var scale_step:Number;
 		private var scale_frame:uint;
 
@@ -54,12 +56,36 @@ package {
 			cell.mask = Hexbound(-1);
 			cell.addChild(child);
 			cell.addChild(cell.mask);
+
+			var bg:Shape = new Shape();
+			cell.addChild(bg);
+			bg.graphics.lineStyle(0, 0x0000ff, 0.0);
+			bg.graphics.beginFill(0x0000ff, 0.0);
+			bg.graphics.drawCircle(0, 0, l);
+			bg.graphics.endFill;
+
+			cell.mouseChildren = false;
+			cell.addEventListener(MouseEvent.CLICK, selector);
+
 			comb.addChild(cell);
 
 			holder.push(new Array(child, cell));
 
 			level();
 			return child;
+		}
+
+		private function selector(e:Event) {
+			for each (var i:Array in holder) {
+				i[1].removeEventListener(MouseEvent.CLICK, selector);
+
+				if (e.target == i[1])
+					e.target.mouseChildren = true;
+				else
+					i[1].visible = false;
+			}
+
+			dispatchEvent(new Hexsel(new Point(e.target.x, e.target.y), 1 / inner.scaleX, Hexsel.HEXSEL));
 		}
 
 		public override function removeChild(child:DisplayObject):DisplayObject {
@@ -89,10 +115,10 @@ package {
 
 		public function level():uint {
 			var n:uint = 1;
-			if (comb.numChildren > 1)
-				n = 2;
-			else if (comb.numChildren > 7)
+			if (comb.numChildren > 7)
 				n = 3;
+			else if (comb.numChildren > 1)
+				n = 2;
 
 			if (n >= 1 && n <= 3) {
 				scale_from	= inner.scaleX;
@@ -100,13 +126,14 @@ package {
 				scale_frame	= 0;
 				scale_step	= (scale_to - scale_from) / speed;
 
+				removeEventListener(Event.ENTER_FRAME, rescale);
 				addEventListener(Event.ENTER_FRAME, rescale);
 			}
 
 			return n;
 		}
 
-		private function rescale(e:Event) {
+		private function rescale(e:Event):void {
 			var n:Number;
 			if (scale_frame++ < speed)
 				n  = scale_from + scale_step * scale_frame;
