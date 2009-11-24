@@ -9,23 +9,23 @@ package {
 	]
 
 	import flash.display.*;
+	import flash.events.*
 	
 	import Hexget;
 
 	public class Ampersand extends Sprite {
 		public function Ampersand():void {
-			var topmost:Hexget = new Hexget();
+			var topmost:Hexget = new Hexget(testshape(0xff0000));
 			addChild(topmost);
 
 			topmost.x = 400;
 			topmost.y = 300;
 
-			topmost.addChild(testshape(0xff0000));
-			topmost.addChild(testshape(0x00ff00));
+			var coco = topmost.addChild(testshape(0x00ff00));
 
-			var test3 = topmost.addChild(new Hexget());
-			test3.addChild(testshape(0x0000ff));
-			test3.addChild(testshape(0xff00ff));
+			stage.addEventListener(MouseEvent.CLICK, function () {
+				topmost.removeChild(coco);
+			});
 		}
 
 		private function testshape(color:uint):Shape {

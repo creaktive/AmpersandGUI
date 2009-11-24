@@ -1,20 +1,29 @@
 package {
 	import flash.display.*;
+	import flash.events.*
 	import flash.geom.*
 
 	public class Hexget extends Sprite {
+		private const speed:uint = 10;
+
 		private var l:Number;
 		private var h:Number;
 		private var w:Number;
 
 		private var inner:Sprite = new Sprite();
 		private var comb:Sprite = new Sprite();
-		private var inner_scale:uint = 1;
+
+		private var scale_from:Number;
+		private var scale_to:Number;
+		private var scale_step:Number;
+		private var scale_frame:uint;
 
 		private var mapping:Array = new Array();
 		private var holder:Array = new Array();
 
-		public function Hexget(len:Number = 300):void {
+		private var core:DisplayObject;
+
+		public function Hexget(core_:DisplayObject, len:Number = 300):void {
 			var ang:Number = Math.PI / 3;
 
 			l = len;
@@ -30,31 +39,33 @@ package {
 			super.addChild(mask);
 
 			Hexgrid(4);
+
+			core = addChild(core_);
 		}
 
 		public override function addChild(child:DisplayObject):DisplayObject {
-			if (comb.numChildren < 19) {
-				var cell:Sprite = new Sprite();
-				cell.x = mapping[comb.numChildren].x;
-				cell.y = mapping[comb.numChildren].y;
+			if (comb.numChildren == 19)
+				return null;
 
-				cell.mask = Hexbound(-1);
-				cell.addChild(child);
-				cell.addChild(cell.mask);
-				comb.addChild(cell);
+			var cell:Sprite = new Sprite();
+			cell.x = mapping[comb.numChildren].x;
+			cell.y = mapping[comb.numChildren].y;
 
-				holder.push(new Array(child, cell));
+			cell.mask = Hexbound(-1);
+			cell.addChild(child);
+			cell.addChild(cell.mask);
+			comb.addChild(cell);
 
-				if (comb.numChildren > 1)
-					level(2);
-				else if (comb.numChildren > 7)
-					level(3);
-			}
+			holder.push(new Array(child, cell));
 
+			level();
 			return child;
 		}
 
 		public override function removeChild(child:DisplayObject):DisplayObject {
+			if (child == core)
+				return null;
+
 			var new_holder:Array = new Array();
 
 			var j:uint = 0;
@@ -72,16 +83,39 @@ package {
 
 			holder = new_holder;
 
+			level();
 			return child;
 		}
 
-		public function level(n:uint = 0):uint {
+		public function level():uint {
+			var n:uint = 1;
+			if (comb.numChildren > 1)
+				n = 2;
+			else if (comb.numChildren > 7)
+				n = 3;
+
 			if (n >= 1 && n <= 3) {
-				inner_scale = n;
-				inner.scaleX = inner.scaleY = 1 / ((n * 2) - 1);	// 1, 1/3, 1/5
+				scale_from	= inner.scaleX;
+				scale_to	= 1 / ((n * 2) - 1);	// 1, 1/3, 1/5
+				scale_frame	= 0;
+				scale_step	= (scale_to - scale_from) / speed;
+
+				addEventListener(Event.ENTER_FRAME, rescale);
 			}
 
-			return inner_scale;
+			return n;
+		}
+
+		private function rescale(e:Event) {
+			var n:Number;
+			if (scale_frame++ < speed)
+				n  = scale_from + scale_step * scale_frame;
+			else {
+				n = scale_to;
+				removeEventListener(Event.ENTER_FRAME, rescale);
+			}
+
+			inner.scaleX = inner.scaleY = n;
 		}
 
 		private function Hexgrid(num:uint):void {
