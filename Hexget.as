@@ -7,7 +7,7 @@ package {
 	import Hexsel;
 
 	public class Hexget extends Sprite {
-		private const speed:uint = 10;
+		private const border_color:uint = 0xFF8822;
 
 		private var l:Number;
 		private var h:Number;
@@ -23,7 +23,7 @@ package {
 
 		private var core:DisplayObject;
 
-		public function Hexget(core_:DisplayObject, len:Number = 300):void {
+		public function Hexget(core_:DisplayObject, len:Number = 250):void {
 			var ang:Number = Math.PI / 3;
 
 			l = len;
@@ -151,7 +151,7 @@ package {
 			var grid:Shape = new Shape();
 			inner.addChild(grid);
 
-			grid.graphics.lineStyle(0, 0xff8000);
+			grid.graphics.lineStyle(0, border_color);
 
 			var posX:Number = -(w * num + l * (num - 1) + l / 2);
 			var posY:Number = -(h * num * 2 - ((num % 2) ? h * 2 : h));

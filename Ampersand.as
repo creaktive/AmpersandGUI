@@ -17,18 +17,40 @@ package {
 	import Hexsel;
 
 	public class Ampersand extends Sprite {
+		private var container:Sprite = new Sprite();
 		private var topmost:Hexget;
 		private var path:Array = new Array();
 		private var view:Hexaffine;
 
 		public function Ampersand():void {
-			var container:Sprite = new Sprite();
-			container.x = 400;
-			container.y = 300;
+			stage.quality		= StageQuality.HIGH;
+			stage.scaleMode		= StageScaleMode.SHOW_ALL;
+			//stage.displayState	= StageDisplayState.FULL_SCREEN;
+			
 			addChild(container);
+			container.x = 400;
+			container.y = 350;
 
-			topmost = new Hexget(testshape(0xff0000));
+			InitView();
+		}
+
+		private function InitView():void {
+			var screen:Shape = new Shape();
+			container.addChild(screen);
+			screen.graphics.lineStyle(0, 0xffffff, 1.0);
+			screen.graphics.beginFill(0xffffff, 1.0);
+			screen.graphics.drawCircle(0, 0, 251);
+			screen.graphics.endFill;
+			container.mask = screen;
+
+			topmost = new Hexget(testshape(0xff0000), 250);
 			container.addChild(topmost);
+
+			var border:Shape = new Shape();
+			container.addChild(border)
+			border.graphics.lineStyle(0, 0xFF8822, 1.0);
+			border.graphics.drawCircle(0, 0, 250);
+
 
 			var sub = topmost.addChild(new Hexget(testshape(0x00ff00)));
 			sub.addChild(testshape(0x0000ff));
@@ -36,7 +58,7 @@ package {
 
 			for (var i:uint = 1; i < 15; i++) {
 				var crap:Sprite = new Sprite();
-				crap.addEventListener(MouseEvent.CLICK, function () {
+				crap.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
 					trace('fuck');
 				});
 
@@ -64,6 +86,7 @@ package {
 				topmost.addChild(crap);
 			}
 
+
 			addEventListener(Hexsel.HEXSEL, function (e:Hexsel):void {
 				path.push(e.params);
 				PlaceView();
@@ -76,6 +99,15 @@ package {
 					PlaceView();
 				}
 			});
+		}
+
+		private function testshape(color:uint):Shape {
+			var test1:Shape = new Shape();
+			test1.graphics.lineStyle(0, color, 0.5);
+			test1.graphics.beginFill(color, 0.5);
+			test1.graphics.drawCircle(0, 0, 400);
+			test1.graphics.endFill;
+			return test1;
 		}
 
 		private function PlaceView():void {
@@ -97,15 +129,6 @@ package {
 		private function ScaleView(e:Event):void {
 			if ((topmost.transform.matrix = view.next()) == view)
 				removeEventListener(Event.ENTER_FRAME, ScaleView);
-		}
-
-		private function testshape(color:uint):Shape {
-			var test1:Shape = new Shape();
-			test1.graphics.lineStyle(0, color, 0.5);
-			test1.graphics.beginFill(color, 0.5);
-			test1.graphics.drawCircle(0, 0, 400);
-			test1.graphics.endFill;
-			return test1;
 		}
 	}
 }
