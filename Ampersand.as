@@ -29,25 +29,30 @@ package {
 			
 			addChild(container);
 			container.x = 400;
-			container.y = 350;
+			container.y = 300;
 
 			InitView();
+			InitMenu();
 		}
 
 		private function InitView():void {
-			var screen:Shape = new Shape();
+			var screen:Sprite = new Sprite();
+			screen.y = 50;
 			container.addChild(screen);
-			screen.graphics.lineStyle(0, 0xffffff, 1.0);
-			screen.graphics.beginFill(0xffffff, 1.0);
-			screen.graphics.drawCircle(0, 0, 251);
-			screen.graphics.endFill;
-			container.mask = screen;
+
+			var port:Shape = new Shape();
+			screen.addChild(port);
+			port.graphics.lineStyle(0, 0xffffff, 1.0);
+			port.graphics.beginFill(0xffffff, 1.0);
+			port.graphics.drawCircle(0, 0, 251);
+			port.graphics.endFill;
+			screen.mask = port;
 
 			topmost = new Hexget(testshape(0xff0000), 250);
-			container.addChild(topmost);
+			screen.addChild(topmost);
 
 			var border:Shape = new Shape();
-			container.addChild(border)
+			screen.addChild(border)
 			border.graphics.lineStyle(0, 0xFF8822, 1.0);
 			border.graphics.drawCircle(0, 0, 250);
 
@@ -55,6 +60,9 @@ package {
 			var sub = topmost.addChild(new Hexget(testshape(0x00ff00)));
 			sub.addChild(testshape(0x0000ff));
 			sub.addChild(testshape(0xff00ff));
+
+			var sub2 = sub.addChild(new Hexget(testshape(0xffff00)));
+			sub2.addChild(testshape(0x00ffff));
 
 			for (var i:uint = 1; i < 15; i++) {
 				var crap:Sprite = new Sprite();
@@ -108,6 +116,24 @@ package {
 			test1.graphics.drawCircle(0, 0, 400);
 			test1.graphics.endFill;
 			return test1;
+		}
+
+		private function InitMenu():void {
+			var input:Sprite = new Sprite();
+			input.y = 25;
+			container.addChild(input);
+
+			var radius:Number = 275;
+			for (var i:int = -1; i < 8; i++) {
+				var ang:Number = i * (Math.PI / 6);
+				var r:Number = 25 + Math.sin(ang) * 25;
+
+				var btn:Shape = new Shape();
+				input.addChild(btn);
+
+				btn.graphics.lineStyle(0, 0xFF8822, 1.0);
+				btn.graphics.drawCircle(radius * Math.cos(ang), -radius * Math.sin(ang), r - 4);
+			}
 		}
 
 		private function PlaceView():void {
