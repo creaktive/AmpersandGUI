@@ -1,8 +1,8 @@
 package {
 	import flash.display.*;
 	import flash.events.*;
-	import flash.text.*;
 
+	import Hexagram;
 	import Hexlay;
 
 	public class InWheel extends Sprite {
@@ -10,6 +10,8 @@ package {
 		private var idx:Number = 0.0;
 
 		public function InWheel(list:Array) {
+			var fmt:Hexlay = new Hexlay(100);
+
 			for each (var str:String in list) {
 				var btn:Sprite = new Sprite();
 				addChild(btn);
@@ -22,24 +24,11 @@ package {
 				bg.graphics.drawCircle(0, 0, 50);
 				bg.graphics.endFill;
 
-				var fmt:TextFormat		= new TextFormat();
-				fmt.align				= TextFormatAlign.CENTER;
-				fmt.color				= Hexlay.color_front;
-				fmt.font				= 'Trebuchet MS';
-				fmt.size				= 50;
-
-				var txt:TextField		= new TextField();
+				var txt:Hexagram = new Hexagram(str, fmt);
 				btn.addChild(txt);
-				txt.antiAliasType		= AntiAliasType.ADVANCED;
-				txt.blendMode			= BlendMode.LAYER;
-				txt.defaultTextFormat	= fmt;
-				txt.selectable			= false;
-				txt.text				= str;
-				txt.wordWrap			= false;
-
-				txt.width				= 200;
-				txt.x					= -100;
-				txt.y					= -35;
+				txt.width = 100;
+				txt.x = -45;
+				txt.y = -50;
 			}
 
 			Render();

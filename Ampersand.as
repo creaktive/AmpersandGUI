@@ -11,9 +11,9 @@ package {
 	import flash.display.*;
 	import flash.events.*
 	import flash.geom.*;
-	import flash.text.*;
 	import flash.ui.*;
 
+	import Hexagram;
 	import Hexget;
 	import Hexlay;
 	import Hexsel;
@@ -23,6 +23,8 @@ package {
 		private var topmost:Hexget;
 		private var path:Array = new Array();
 		private var view:Hexaffine;
+
+		private var fmt:Hexlay = new Hexlay(60);
 
 		public function Ampersand():void {
 			stage.quality		= StageQuality.HIGH;
@@ -52,7 +54,7 @@ package {
 			port.graphics.endFill;
 			screen.mask = port;
 
-			topmost = new Hexget(Cell('main'), 250);
+			topmost = new Hexget(Cell('PRINCIPAL'), 250);
 			screen.addChild(topmost);
 
 			var border:Shape = new Shape();
@@ -61,16 +63,15 @@ package {
 			border.graphics.drawCircle(0, 0, 250);
 
 
-			var sub = topmost.addChild(new Hexget(Cell('sub 1')));
-			sub.addChild(Cell('sub 2'));
-			sub.addChild(Cell('sub 3'));
+			var sub = topmost.addChild(new Hexget(Cell('NIVEL 2 A')));
+			sub.addChild(Cell('NIVEL 2 B'));
+			sub.addChild(Cell('NIVEL 2 C'));
 
-			var sub2 = sub.addChild(new Hexget(Cell('sub 4')));
-			sub2.addChild(Cell('sub 5'));
+			var sub2 = sub.addChild(new Hexget(Cell('NIVEL 3 A')));
+			sub2.addChild(Cell('NIVEL 3 B'));
 
-			for (var i:uint = 1; i < 10; i++) {
-				topmost.addChild(Cell(String(i)));
-			}
+			for (var i:uint = 1; i < 10; i++)
+				topmost.addChild(Cell('NIVEL 1 ' + i));
 
 
 			addEventListener(Hexsel.HEXSEL, function (e:Hexsel):void {
@@ -109,24 +110,11 @@ package {
 			bg.graphics.drawCircle(0, 0, 400);
 			bg.graphics.endFill;
 
-			var fmt:TextFormat		= new TextFormat();
-			fmt.align				= TextFormatAlign.CENTER;
-			fmt.color				= Hexlay.color_front;
-			fmt.font				= 'Trebuchet MS';
-			fmt.size				= 50;
-
-			var txt:TextField		= new TextField();
+			var txt:Hexagram = new Hexagram(str, fmt);
 			cell.addChild(txt);
-			txt.antiAliasType		= AntiAliasType.ADVANCED;
-			txt.blendMode			= BlendMode.LAYER;
-			txt.defaultTextFormat	= fmt;
-			txt.selectable			= false;
-			txt.text				= str;
-			txt.wordWrap			= false;
-
-			txt.width				= 200;
-			txt.x					= -100;
-			txt.y					= -35;
+			txt.width = 500;
+			txt.x = -250;
+			txt.y = -35;
 
 			return cell;
 		}
