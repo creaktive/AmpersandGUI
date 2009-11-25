@@ -14,6 +14,7 @@ package {
 	import flash.text.*;
 
 	import Hexget;
+	import Hexlay;
 	import Hexsel;
 
 	public class Ampersand extends Sprite {
@@ -48,50 +49,24 @@ package {
 			port.graphics.endFill;
 			screen.mask = port;
 
-			topmost = new Hexget(testshape(0xff0000), 250);
+			topmost = new Hexget(Cell('main'), 250);
 			screen.addChild(topmost);
 
 			var border:Shape = new Shape();
 			screen.addChild(border)
-			border.graphics.lineStyle(0, 0xFF8822, 1.0);
+			border.graphics.lineStyle(0, Hexlay.color_front, 1.0);
 			border.graphics.drawCircle(0, 0, 250);
 
 
-			var sub = topmost.addChild(new Hexget(testshape(0x00ff00)));
-			sub.addChild(testshape(0x0000ff));
-			sub.addChild(testshape(0xff00ff));
+			var sub = topmost.addChild(new Hexget(Cell('sub 1')));
+			sub.addChild(Cell('sub 2'));
+			sub.addChild(Cell('sub 3'));
 
-			var sub2 = sub.addChild(new Hexget(testshape(0xffff00)));
-			sub2.addChild(testshape(0x00ffff));
+			var sub2 = sub.addChild(new Hexget(Cell('sub 4')));
+			sub2.addChild(Cell('sub 5'));
 
-			for (var i:uint = 1; i < 15; i++) {
-				var crap:Sprite = new Sprite();
-				crap.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
-					trace('fuck');
-				});
-
-				crap.addChild(testshape(Math.round(Math.random() * 0xffffff)));
-
-				var fmt:TextFormat		= new TextFormat();
-				fmt.align				= TextFormatAlign.CENTER;
-				fmt.color				= 0xffffff;
-				fmt.font				= 'Trebuchet MS';
-				fmt.size				= 100;
-
-				var txt:TextField		= new TextField();
-				crap.addChild(txt);
-				txt.antiAliasType		= AntiAliasType.ADVANCED;
-				txt.blendMode			= BlendMode.LAYER;
-				txt.defaultTextFormat	= fmt;
-				txt.selectable			= false;
-				txt.text				= String(i++);
-				txt.wordWrap			= false;
-
-				txt.width				= 200;
-				txt.x					= -100;
-				txt.y					= -65;
-
-				topmost.addChild(crap);
+			for (var i:uint = 1; i < 10; i++) {
+				topmost.addChild(Cell(String(i)));
 			}
 
 
@@ -109,31 +84,51 @@ package {
 			});
 		}
 
-		private function testshape(color:uint):Shape {
-			var test1:Shape = new Shape();
-			test1.graphics.lineStyle(0, color, 0.5);
-			test1.graphics.beginFill(color, 0.5);
-			test1.graphics.drawCircle(0, 0, 400);
-			test1.graphics.endFill;
-			return test1;
+		private function Cell(str:String):Sprite {
+			var cell:Sprite = new Sprite();
+			cell.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+				trace('test');
+			});
+
+			var bg:Shape = new Shape();
+			cell.addChild(bg);
+			bg.graphics.lineStyle(0, Hexlay.color_back, 1.0);
+			bg.graphics.beginFill(Hexlay.color_back, 1.0);
+			bg.graphics.drawCircle(0, 0, 400);
+			bg.graphics.endFill;
+
+			var fmt:TextFormat		= new TextFormat();
+			fmt.align				= TextFormatAlign.CENTER;
+			fmt.color				= Hexlay.color_front;
+			fmt.font				= 'Trebuchet MS';
+			fmt.size				= 50;
+
+			var txt:TextField		= new TextField();
+			cell.addChild(txt);
+			txt.antiAliasType		= AntiAliasType.ADVANCED;
+			txt.blendMode			= BlendMode.LAYER;
+			txt.defaultTextFormat	= fmt;
+			txt.selectable			= false;
+			txt.text				= str;
+			txt.wordWrap			= false;
+
+			txt.width				= 200;
+			txt.x					= -100;
+			txt.y					= -35;
+
+			return cell;
 		}
 
 		private function InitMenu():void {
-			var input:Sprite = new Sprite();
+			var list:Array = new Array('O','A','E','S','M','R','L','U','I','N','Z','D','T','Y','K','G','H','X','C','P','W','B','V','F','J','Q');
+
+			var input:InWheel = new InWheel(list);
 			input.y = 25;
 			container.addChild(input);
 
-			var radius:Number = 275;
-			for (var i:int = -1; i < 8; i++) {
-				var ang:Number = i * (Math.PI / 6);
-				var r:Number = 25 + Math.sin(ang) * 25;
-
-				var btn:Shape = new Shape();
-				input.addChild(btn);
-
-				btn.graphics.lineStyle(0, 0xFF8822, 1.0);
-				btn.graphics.drawCircle(radius * Math.cos(ang), -radius * Math.sin(ang), r - 4);
-			}
+			stage.addEventListener(MouseEvent.MOUSE_WHEEL, function (e:MouseEvent):void {
+				input.rotation += e.delta;
+			});
 		}
 
 		private function PlaceView():void {

@@ -4,11 +4,10 @@ package {
 	import flash.geom.*
 
 	import Hexaffine;
+	import Hexlay;
 	import Hexsel;
 
 	public class Hexget extends Sprite {
-		private const border_color:uint = 0xFF8822;
-
 		private var l:Number;
 		private var h:Number;
 		private var w:Number;
@@ -151,7 +150,7 @@ package {
 			var grid:Shape = new Shape();
 			inner.addChild(grid);
 
-			grid.graphics.lineStyle(0, border_color);
+			grid.graphics.lineStyle(0, Hexlay.color_front);
 
 			var posX:Number = -(w * num + l * (num - 1) + l / 2);
 			var posY:Number = -(h * num * 2 - ((num % 2) ? h * 2 : h));
