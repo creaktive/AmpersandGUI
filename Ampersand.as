@@ -16,13 +16,16 @@ package {
 	import Hexsel;
 
 	public class Ampersand extends Sprite {
+		private var topmost:Hexget;
+		private var path:Array = new Array();
+
 		public function Ampersand():void {
 			var container:Sprite = new Sprite();
 			container.x = 400;
 			container.y = 300;
 			addChild(container);
 
-			var topmost:Hexget = new Hexget(testshape(0xff0000));
+			topmost = new Hexget(testshape(0xff0000));
 			container.addChild(topmost);
 
 			var sub = topmost.addChild(new Hexget(testshape(0x00ff00)));
@@ -59,13 +62,34 @@ package {
 				topmost.addChild(crap);
 			}
 
-			var factor:Number = 1;
-			addEventListener(Hexsel.HEXSEL, function (e:Hexsel) {
-				factor *= e.factor;
-				topmost.x = topmost.x * e.factor - e.coords.x;
-				topmost.y = topmost.y * e.factor - e.coords.y;
-				topmost.scaleX = topmost.scaleY = factor;
+			addEventListener(Hexsel.HEXSEL, function (e:Hexsel):void {
+				path.push(e.params);
+				PlaceView();
 			});
+
+			addEventListener(MouseEvent.RIGHT_CLICK, function (e:MouseEvent):void {
+				if (path.length) {
+					var last:Object = path.pop();
+					last['ref'].overview();
+					PlaceView();
+				}
+			});
+		}
+
+		private function PlaceView():void {
+			var factor:Number = 1;
+			var myX:Number = 0;
+			var myY:Number = 0;
+
+			for each (var params:Object in path) {
+				factor *= params['factor'];
+				myX = (myX * params['factor']) - params['coords']['x'];
+				myY = (myY * params['factor']) - params['coords']['y'];
+			}
+
+			topmost.x = myX;
+			topmost.y = myY;
+			topmost.scaleX = topmost.scaleY = factor;
 		}
 
 		private function testshape(color:uint):Shape {

@@ -75,7 +75,7 @@ package {
 			return child;
 		}
 
-		private function selector(e:Event) {
+		private function selector(e:Event):void {
 			for each (var i:Array in holder) {
 				i[1].removeEventListener(MouseEvent.CLICK, selector);
 
@@ -85,7 +85,22 @@ package {
 					i[1].visible = false;
 			}
 
-			dispatchEvent(new Hexsel(new Point(e.target.x, e.target.y), 1 / inner.scaleX, Hexsel.HEXSEL));
+			var params:Object = {
+				coords:	new Point(e.target.x, e.target.y),
+				factor:	1 / inner.scaleX,
+				ref:	this
+			};
+
+			dispatchEvent(new Hexsel(params, Hexsel.HEXSEL));
+		}
+
+		public function overview():void {
+			for each (var i:Array in holder) {
+				i[1].removeEventListener(MouseEvent.CLICK, selector);
+				i[1].addEventListener(MouseEvent.CLICK, selector);
+				i[1].mouseChildren = false;
+				i[1].visible = true;
+			}
 		}
 
 		public override function removeChild(child:DisplayObject):DisplayObject {

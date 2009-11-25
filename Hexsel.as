@@ -1,15 +1,14 @@
 package {
+	import flash.display.*
 	import flash.events.*;
 	import flash.geom.*;
 
 	public class Hexsel extends Event {
 		public static const HEXSEL:String = 'HEXSEL';
-		public var coords:Object;
-		public var factor:Number;
+		public var params:Object;
 
-		public function Hexsel(coords_:Point, factor_:Number, type:String, bubbles:Boolean = true, cancelable:Boolean = true) {
-			coords = coords_;
-			factor = factor_;
+		public function Hexsel(params_:Object, type:String, bubbles:Boolean = true, cancelable:Boolean = true) {
+			params = params_;
 			super(type, bubbles, cancelable);
 		}
 	}
