@@ -10,7 +10,8 @@ package {
 
 	import flash.display.*;
 	import flash.events.*
-	import flash.text.*
+	import flash.geom.*;
+	import flash.text.*;
 
 	import Hexget;
 	import Hexsel;
@@ -18,6 +19,7 @@ package {
 	public class Ampersand extends Sprite {
 		private var topmost:Hexget;
 		private var path:Array = new Array();
+		private var view:Hexaffine;
 
 		public function Ampersand():void {
 			var container:Sprite = new Sprite();
@@ -87,9 +89,14 @@ package {
 				myY = (myY * params['factor']) - params['coords']['y'];
 			}
 
-			topmost.x = myX;
-			topmost.y = myY;
-			topmost.scaleX = topmost.scaleY = factor;
+			view = new Hexaffine(topmost.transform.matrix, myX, myY, factor);
+			removeEventListener(Event.ENTER_FRAME, ScaleView);
+			addEventListener(Event.ENTER_FRAME, ScaleView);
+		}
+
+		private function ScaleView(e:Event):void {
+			if ((topmost.transform.matrix = view.next()) == view)
+				removeEventListener(Event.ENTER_FRAME, ScaleView);
 		}
 
 		private function testshape(color:uint):Shape {

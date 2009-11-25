@@ -1,7 +1,5 @@
 package {
-	import flash.display.*
 	import flash.events.*;
-	import flash.geom.*;
 
 	public class Hexsel extends Event {
 		public static const HEXSEL:String = 'HEXSEL';

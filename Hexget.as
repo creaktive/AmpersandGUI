@@ -3,6 +3,7 @@ package {
 	import flash.events.*
 	import flash.geom.*
 
+	import Hexaffine;
 	import Hexsel;
 
 	public class Hexget extends Sprite {
@@ -15,10 +16,7 @@ package {
 		private var inner:Sprite = new Sprite();
 		private var comb:Sprite = new Sprite();
 
-		private var scale_from:Number;
-		private var scale_to:Number = 1.0;
-		private var scale_step:Number;
-		private var scale_frame:uint;
+		private var view:Hexaffine;
 
 		private var mapping:Array = new Array();
 		private var holder:Array = new Array();
@@ -136,28 +134,17 @@ package {
 				n = 2;
 
 			if (n >= 1 && n <= 3) {
-				scale_from	= inner.scaleX;
-				scale_to	= 1 / ((n * 2) - 1);	// 1, 1/3, 1/5
-				scale_frame	= 0;
-				scale_step	= (scale_to - scale_from) / speed;
-
-				removeEventListener(Event.ENTER_FRAME, rescale);
-				addEventListener(Event.ENTER_FRAME, rescale);
+				view = new Hexaffine(inner.transform.matrix, 0, 0, 1 / ((n * 2) - 1));	// 1, 1/3, 1/5
+				removeEventListener(Event.ENTER_FRAME, ScaleView);
+				addEventListener(Event.ENTER_FRAME, ScaleView);
 			}
 
 			return n;
 		}
 
-		private function rescale(e:Event):void {
-			var n:Number;
-			if (scale_frame++ < speed)
-				n  = scale_from + scale_step * scale_frame;
-			else {
-				n = scale_to;
-				removeEventListener(Event.ENTER_FRAME, rescale);
-			}
-
-			inner.scaleX = inner.scaleY = n;
+		private function ScaleView(e:Event):void {
+			if ((inner.transform.matrix = view.next()) == view)
+				removeEventListener(Event.ENTER_FRAME, ScaleView);
 		}
 
 		private function Hexgrid(num:uint):void {
