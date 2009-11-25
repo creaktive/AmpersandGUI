@@ -12,6 +12,7 @@ package {
 	import flash.events.*
 	import flash.geom.*;
 	import flash.text.*;
+	import flash.ui.*;
 
 	import Hexget;
 	import Hexlay;
@@ -27,7 +28,9 @@ package {
 			stage.quality		= StageQuality.HIGH;
 			stage.scaleMode		= StageScaleMode.SHOW_ALL;
 			//stage.displayState	= StageDisplayState.FULL_SCREEN;
-			
+
+			Multitouch.inputMode = MultitouchInputMode.GESTURE;
+
 			addChild(container);
 			container.x = 400;
 			container.y = 300;
@@ -75,13 +78,22 @@ package {
 				PlaceView();
 			});
 
-			addEventListener(MouseEvent.RIGHT_CLICK, function (e:MouseEvent):void {
-				if (path.length) {
-					var last:Object = path.pop();
-					last['ref'].overview();
-					PlaceView();
-				}
+			stage.addEventListener(MouseEvent.RIGHT_CLICK, function (e:MouseEvent):void {
+				Unzoom();
 			});
+
+			stage.addEventListener(TransformGestureEvent.GESTURE_ZOOM, function (e:TransformGestureEvent):void {
+				if ((e.scaleX + e.scaleY) / 2 < 0.8)
+					Unzoom();
+			});
+		}
+
+		private function Unzoom():void {
+			if (path.length) {
+				var last:Object = path.pop();
+				last['ref'].overview();
+				PlaceView();
+			}
 		}
 
 		private function Cell(str:String):Sprite {
@@ -127,7 +139,11 @@ package {
 			container.addChild(input);
 
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, function (e:MouseEvent):void {
-				input.rotation += e.delta;
+				input.rotation -= e.delta * 5;
+			});
+
+			stage.addEventListener(TransformGestureEvent.GESTURE_ROTATE, function (e:TransformGestureEvent):void {
+				input.rotation -= e.rotation * 5;
 			});
 		}
 
