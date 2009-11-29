@@ -17,6 +17,7 @@ package {
 	import Hexget;
 	import Hexlay;
 	import Hexsel;
+	import OHTI;
 
 	public class Ampersand extends Sprite {
 		private var container:Sprite = new Sprite();
@@ -25,6 +26,8 @@ package {
 		private var view:Hexaffine;
 
 		private var fmt:Hexlay = new Hexlay(60);
+
+		private var ohti:OHTI = new OHTI();
 
 		public function Ampersand():void {
 			stage.quality		= StageQuality.HIGH;
@@ -120,9 +123,7 @@ package {
 		}
 
 		private function InitMenu():void {
-			var list:Array = new Array('O','A','E','S','M','R','L','U','I','N','Z','D','T','Y','K','G','H','X','C','P','W','B','V','F','J','Q');
-
-			var input:InWheel = new InWheel(list);
+			var input:InWheel = new InWheel(ohti.nextChr(''));
 			input.y = 25;
 			container.addChild(input);
 

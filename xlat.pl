@@ -23,7 +23,7 @@ for(;;) {
 			($set[2], $set[3]) = ($set[3], 1.0 - $set[2]);
 			($set[4], $set[5]) = ($set[5], 1.0 - $set[4]);
 			substr($pkt, $p, 32) = pack('Z* i> f>*', @set);
-			#printf("cmd=%s id=%d x=%f y=%f vx=%f vy=%f a=%f\n", @set);
+			printf("cmd=%s id=%d x=%f y=%f vx=%f vy=%f a=%f\n", @set);
 		}
 
 		$out->send($pkt);
