@@ -12,6 +12,7 @@ package {
 			embedFonts			= true;
 			selectable			= false;
 			text				= str;
+			type				= TextFieldType.DYNAMIC;
 			wordWrap			= false;
 		}
 	}

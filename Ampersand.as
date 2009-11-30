@@ -8,10 +8,13 @@ package {
 		)
 	]
 
+	import fl.managers.*;
+
 	import flash.display.*;
 	import flash.events.*
 	import flash.geom.*;
 	import flash.ui.*;
+	import flash.text.*;
 
 	import Hexagram;
 	import Hexget;
@@ -36,12 +39,27 @@ package {
 
 			Multitouch.inputMode = MultitouchInputMode.GESTURE;
 
+			var fm:FocusManager = new FocusManager(this);
+			fm.activate();
+
 			addChild(container);
 			container.x = 400;
 			container.y = 300;
 
 			InitView();
 			InitMenu();
+
+			/**************************************
+			var t:TextField = new TextField();
+			t.border		= true;
+			t.defaultTextFormat = fmt;
+			t.selectable	= true;
+			t.text			= 'hi fucker';
+			t.type			= TextFieldType.INPUT;
+			t.width			= 400;
+			t.wordWrap		= true;
+			addChild(t);
+			**************************************/
 		}
 
 		private function InitView():void {
@@ -126,6 +144,18 @@ package {
 			var input:InWheel = new InWheel(ohti.nextChr(''));
 			input.y = 25;
 			container.addChild(input);
+
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, function (e:KeyboardEvent):void {
+				if (stage.focus is TextField) {
+					var tf:TextField = TextField(stage.focus);
+					if (tf.type == TextFieldType.INPUT) {
+						tf.text = tf.text.substring(0, tf.selectionBeginIndex) + (String.fromCharCode(e.charCode)) + tf.text.substring(tf.selectionEndIndex);
+						tf.setSelection(tf.selectionBeginIndex + 1, tf.selectionBeginIndex + 1);
+
+						trace(tf.text);
+					}
+				}
+			});
 
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, function (e:MouseEvent):void {
 				input.rotation -= e.delta * 5;
