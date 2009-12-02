@@ -9,7 +9,7 @@ package {
 		private var bg:Shape = new Shape();
 		private var txt:Hexagram;
 
-		public function Spot(str:String) {
+		public function Spot(str:String, font_:uint = 0) {
 			addChild(bg);
 			bg.graphics.lineStyle(0, Hexlay.color_front, 1.0);
 			bg.graphics.beginFill(Hexlay.color_back, 1.0);
@@ -22,6 +22,9 @@ package {
 			txt.width = 100;
 			txt.x = -47;
 			txt.y = -65;
+
+			if (font_)
+				txt.swap(font_);
 
 			var chr:uint = str.charCodeAt(0);
 

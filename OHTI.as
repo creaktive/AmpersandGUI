@@ -24,7 +24,6 @@ package {
 
 		public function next(str:String):Array {
 			str = str.toLowerCase();
-			str = str.replace(/^.*[^a-z]/, '');
 
 			var tri:Dictionary = new Dictionary();
 			var a:String = str.length >= 2 ? str.charAt(str.length - 2) : '';

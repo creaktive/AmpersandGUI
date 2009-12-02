@@ -53,17 +53,7 @@ package {
 				Broadcaster.dispatchEvent(new Event(Hexagram.FONTSWAP));
 			});
 
-			/**************************************
-			var t:TextField = new TextField();
-			t.border		= true;
-			t.defaultTextFormat = fmt;
-			t.selectable	= true;
-			t.text			= 'hi fucker';
-			t.type			= TextFieldType.INPUT;
-			t.width			= 400;
-			t.wordWrap		= true;
-			addChild(t);
-			**************************************/
+			addChild(new Hexagram('puta que o pariu', 25, 400, false, TextFieldType.INPUT, TextFormatAlign.LEFT));
 		}
 
 		private function InitView():void {
@@ -149,14 +139,28 @@ package {
 			input.y = 25;
 			container.addChild(input);
 
+			stage.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+				if (stage.focus is TextField) {
+					var tf:TextField = TextField(stage.focus);
+					if (tf.type == TextFieldType.INPUT) {
+						var cw:Object = CurrentWord(tf);
+						input.Reload(ohti.nextChr(cw['word']));
+					}
+				}
+			});
+
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, function (e:KeyboardEvent):void {
 				if (stage.focus is TextField) {
 					var tf:TextField = TextField(stage.focus);
 					if (tf.type == TextFieldType.INPUT) {
-						tf.text = tf.text.substring(0, tf.selectionBeginIndex) + (String.fromCharCode(e.charCode)) + tf.text.substring(tf.selectionEndIndex);
-						tf.setSelection(tf.selectionBeginIndex + 1, tf.selectionBeginIndex + 1);
+						var chr:String = String.fromCharCode(e.charCode);
 
-						trace(tf.text);
+						var cw:Object = CurrentWord(tf);
+						tf.text = tf.text.substring(0, cw['to']) + chr + tf.text.substring(cw['to']);
+
+						tf.setSelection(cw['to'] + 1, cw['to'] + 1);
+
+						input.Reload(ohti.nextChr(cw['word'] + chr));
 					}
 				}
 			});
@@ -168,6 +172,27 @@ package {
 			stage.addEventListener(TransformGestureEvent.GESTURE_ROTATE, function (e:TransformGestureEvent):void {
 				input.Impulse(e.rotation);
 			});
+		}
+
+		private function CurrentWord(tf:TextField):Object {
+			var i:int = tf.selectionBeginIndex - 1;
+			while (i >= 0) {
+				var chr:uint = tf.text.charCodeAt(i);
+				if (!(((chr >= 0x41) && (chr <= 0x5A)) || ((chr >= 0x61) && (chr <= 0x7A))))
+					break;
+
+				i--;
+			}
+			var from:uint = i + 1;
+
+			for (var i:int = from; i < tf.text.length; i++) {
+				var chr:uint = tf.text.charCodeAt(i);
+				if (!(((chr >= 0x41) && (chr <= 0x5A)) || ((chr >= 0x61) && (chr <= 0x7A))))
+					break;
+			}
+			var to:uint = i;
+
+			return { word: tf.text.substring(from, to), from: from, to: to };
 		}
 
 		private function PlaceView():void {
