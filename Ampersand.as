@@ -162,11 +162,11 @@ package {
 			});
 
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, function (e:MouseEvent):void {
-				input.rotation -= e.delta * 5;
+				input.Impulse(e.delta);
 			});
 
 			stage.addEventListener(TransformGestureEvent.GESTURE_ROTATE, function (e:TransformGestureEvent):void {
-				input.rotation -= e.rotation * 5;
+				input.Impulse(e.rotation);
 			});
 		}
 
