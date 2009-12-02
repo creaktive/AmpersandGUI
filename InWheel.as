@@ -9,16 +9,91 @@ package {
 		private var idx:Number = 0.0;
 
 		private var speed:Number = 0;
+		private var radius:Number = 275;
+
+		private var new_list:Array;
 
 		public function InWheel(list:Array) {
-			for each (var str:String in list) {
-				var btn:Spot = new Spot(str);
-				addChild(btn);
+			var myMask:Shape = drawCrescent();
+			addChild(myMask);
+			mask = myMask;
 
-				seq.push(btn);
+			Reload(list);
+		}
+
+		public function Reload(list:Array) {
+			new_list = list;
+
+			removeEventListener(Event.ENTER_FRAME, Shrink);
+			addEventListener(Event.ENTER_FRAME, Shrink);
+		}
+
+		private function Shrink(e:Event):void {
+			radius -= 10;
+			if (radius <= 175) {
+				removeEventListener(Event.ENTER_FRAME, Shrink);
+				radius = 175;
+
+				for each (var btn:Spot in seq)
+					removeChild(btn);
+
+				seq.splice(0);
+
+				for each (var str:String in new_list) {
+					var btn:Spot = new Spot(str);
+					addChild(btn);
+
+					seq.push(btn);
+				}
+
+				removeEventListener(Event.ENTER_FRAME, Grow);
+				addEventListener(Event.ENTER_FRAME, Grow);
 			}
 
 			Render();
+		}
+
+		private function Grow(e:Event):void {
+			radius += 10;
+			if (radius >= 275) {
+				removeEventListener(Event.ENTER_FRAME, Grow);
+				radius = 275;
+			}
+
+			Render();
+		}
+
+		private function drawCrescent():Shape {
+			var step:Number = Math.PI / 50;
+
+			var cr:Shape = new Shape();
+			cr.graphics.lineStyle(0, 0xffffff, 0.1);
+			cr.graphics.beginFill(0xffffff, 0.1);
+
+
+			// outer
+			var j:Boolean = true;
+			for (var i:Number = Math.PI / 2; i <= Math.PI * 5 / 2; i += step) {
+				var x_:Number = (radius + 25) * Math.cos(i);
+				var y_:Number = (radius + 25) * Math.sin(i) - 25;
+
+				if (j) {
+					cr.graphics.moveTo(x_, y_);
+					j = false;
+				}
+
+				cr.graphics.lineTo(x_, y_);
+			}
+
+			// inner
+			for (var i:Number = Math.PI * 5 / 2; i >= Math.PI / 2; i -= step) {
+				var x_:Number = (radius - 23) * Math.cos(i);
+				var y_:Number = (radius - 23) * Math.sin(i) + 25;
+				cr.graphics.lineTo(x_, y_);
+			}
+
+			cr.graphics.endFill;
+			return cr;
 		}
 
 		public function Impulse(speed_:Number):void {
@@ -56,7 +131,6 @@ package {
 		}
 
 		private function Render():void {
-			var radius:Number = 275;
 			var i:int = 0;
 			for each (var btn:Sprite in seq) {
 				var ang:Number = (++i * (Math.PI / 6)) - idx;
@@ -72,6 +146,8 @@ package {
 				} else
 					btn.visible = false;
 			}
+
+			alpha = (radius - 175) / 100;
 		}
 	}
 }
