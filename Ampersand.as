@@ -16,6 +16,8 @@ package {
 	import flash.ui.*;
 	import flash.text.*;
 
+	import com.pixelwelders.events.Broadcaster;
+
 	import Hexagram;
 	import Hexget;
 	import Hexlay;
@@ -27,8 +29,6 @@ package {
 		private var topmost:Hexget;
 		private var path:Array = new Array();
 		private var view:Hexaffine;
-
-		private var fmt:Hexlay = new Hexlay(60);
 
 		private var ohti:OHTI = new OHTI();
 
@@ -48,6 +48,10 @@ package {
 
 			InitView();
 			InitMenu();
+
+			stage.addEventListener(MouseEvent.MIDDLE_CLICK, function (e:MouseEvent):void {
+				Broadcaster.dispatchEvent(new Event(Hexagram.FONTSWAP));
+			});
 
 			/**************************************
 			var t:TextField = new TextField();
@@ -131,7 +135,7 @@ package {
 			bg.graphics.drawCircle(0, 0, 400);
 			bg.graphics.endFill;
 
-			var txt:Hexagram = new Hexagram(str, fmt);
+			var txt:Hexagram = new Hexagram(str);
 			cell.addChild(txt);
 			txt.width = 500;
 			txt.x = -250;

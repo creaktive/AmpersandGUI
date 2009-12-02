@@ -6,7 +6,6 @@ package {
 	import Hexlay;
 
 	public class Spot extends Sprite {
-		private var fmt:Hexlay = new Hexlay(100);
 		private var bg:Shape = new Shape();
 		private var txt:Hexagram;
 
@@ -17,12 +16,12 @@ package {
 			bg.graphics.drawCircle(0, 0, 50);
 			bg.graphics.endFill;
 
-			txt = new Hexagram(str, fmt);
+			txt = new Hexagram(str, 100);
 			addChild(txt);
 			txt.mouseEnabled = false;
 			txt.width = 100;
-			txt.x = -45;
-			txt.y = -50;
+			txt.x = -47;
+			txt.y = -65;
 
 			var chr:uint = str.charCodeAt(0);
 
