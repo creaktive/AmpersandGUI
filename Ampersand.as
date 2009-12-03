@@ -156,11 +156,16 @@ package {
 						var chr:String = String.fromCharCode(e.charCode);
 
 						var cw:Object = CurrentWord(tf);
-						tf.text = tf.text.substring(0, cw['to']) + chr + tf.text.substring(cw['to']);
 
-						tf.setSelection(cw['to'] + 1, cw['to'] + 1);
-
-						input.Reload(ohti.nextChr(cw['word'] + chr));
+						if (e.charCode == Keyboard.BACKSPACE) {
+							tf.text = tf.text.substring(0, cw['to'] - 1) + tf.text.substring(cw['to']);
+							tf.setSelection(cw['to'] - 1, cw['to'] - 1);
+							input.Reload(ohti.nextChr(cw['word'].substring(0, -1)));
+						} else {
+							tf.text = tf.text.substring(0, cw['to']) + chr + tf.text.substring(cw['to']);
+							tf.setSelection(cw['to'] + 1, cw['to'] + 1);
+							input.Reload(ohti.nextChr(cw['word'] + chr));
+						}
 					}
 				}
 			});

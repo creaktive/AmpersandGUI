@@ -32,6 +32,12 @@ package {
 		public function Reload(list:Array) {
 			new_list = list;
 
+			new_list.unshift('WSP');
+			new_list.unshift('BCK');
+			new_list.unshift('NUM');
+			new_list.unshift('SPC');
+			rotation = 4 * 30;
+
 			removeEventListener(Event.ENTER_FRAME, Shrink);
 			addEventListener(Event.ENTER_FRAME, Shrink);
 		}
@@ -113,7 +119,7 @@ package {
 		private function SpinDown(e:Event):void {
 			if (rotation < 0)
 				speed = -1;
-			else if (rotation > (seq.length - 6) * 30)	// Math.PI * ((seq.length - 7) / 6)
+			else if (rotation > (seq.length - 5) * 30)	// Math.PI * ((seq.length - 7) / 6)
 				speed = 1;
 
 			if (Math.abs(speed) >= 1) {
