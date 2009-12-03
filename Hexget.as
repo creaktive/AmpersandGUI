@@ -39,7 +39,7 @@ package {
 
 			Hexgrid(4);
 
-			core = addChild(core_);
+			core = this.addChild(core_);
 		}
 
 		public override function addChild(child:DisplayObject):DisplayObject {

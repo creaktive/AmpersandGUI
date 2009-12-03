@@ -45,6 +45,10 @@ package {
 		private var clockClass:Class;
 		private var clock:Sprite = new clockClass();
 
+		[Embed(source='download.svg')]
+		private var downloadClass:Class;
+		private var download:Sprite = new downloadClass();
+
 		[Embed(source='globe.svg')]
 		private var globeClass:Class;
 		private var globe:Sprite = new globeClass();
@@ -57,9 +61,21 @@ package {
 		private var musicClass:Class;
 		private var music:Sprite = new musicClass();
 
+		[Embed(source='questionmark.svg')]
+		private var questionmarkClass:Class;
+		private var questionmark:Sprite = new questionmarkClass();
+
+		[Embed(source='refresh.svg')]
+		private var refreshClass:Class;
+		private var refresh:Sprite = new refreshClass();
+
 		[Embed(source='settings.svg')]
 		private var settingsClass:Class;
 		private var settings:Sprite = new settingsClass();
+
+		[Embed(source='upload.svg')]
+		private var uploadClass:Class;
+		private var upload:Sprite = new uploadClass();
 
 		private var container:Sprite = new Sprite();
 
@@ -104,7 +120,7 @@ package {
 			port.graphics.endFill;
 			screen.mask = port;
 
-			var root:Sprite = Cell("ampersand v0.1");
+			var root:Sprite = Cell('ampersand v0.1');
 			topmost = new Hexget(root, 250);
 			screen.addChild(topmost);
 
@@ -128,16 +144,6 @@ package {
 			});
 
 			/*
-			var sub = topmost.addChild(new Hexget(Cell('NIVEL 2 A')));
-			sub.addChild(Cell('NIVEL 2 B'));
-			sub.addChild(Cell('NIVEL 2 C'));
-
-			var sub2 = sub.addChild(new Hexget(Cell('NIVEL 3 A')));
-			sub2.addChild(Cell('NIVEL 3 B'));
-
-			for (var i:uint = 1; i < 10; i++)
-				topmost.addChild(Cell('NIVEL 1 ' + i));
-
 			addChild(new Hexagram('puta que o pariu', 25, 400, false, TextFieldType.INPUT, TextFormatAlign.LEFT));
 			*/
 
@@ -151,15 +157,69 @@ package {
 			book.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
 				if (!started) {
 					started = true;
-					topmost.addChild(Cell('NIVEL 1'));
+
+					var apr_root:Sprite = Cell('apresentacao');
+					var apr = topmost.addChild(new Hexget(apr_root));
+
+					apr_root.addChild(SetupIcon(questionmark, 'paradigmas', 7, 100));
+					var paradigmas = null;
+					questionmark.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+						if (!paradigmas) {
+							paradigmas = apr.addChild(new Hexget(Cell('paradigmas')));
+							paradigmas.addChild(Cell('A'));
+							paradigmas.addChild(Cell('B'));
+							paradigmas.addChild(Cell('C'));
+							paradigmas.addChild(Cell('D'));
+						}
+					});
+
+					apr_root.addChild(SetupIcon(download, 'input', 1, 100));
+					var input = null;
+					download.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+						if (!input) {
+							input = apr.addChild(new Hexget(Cell('input')));
+							input.addChild(Cell('A'));
+							input.addChild(Cell('B'));
+							input.addChild(Cell('C'));
+							input.addChild(Cell('D'));
+							input.addChild(Cell('E'));
+							input.addChild(Cell('F'));
+							input.addChild(Cell('G'));
+						}
+					});
+
+					apr_root.addChild(SetupIcon(upload, 'output', 3, 100));
+					var output = null;
+					upload.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+						if (!output) {
+							output = apr.addChild(new Hexget(Cell('output')));
+							output.addChild(Cell('A'));
+							output.addChild(Cell('B'));
+							output.addChild(Cell('C'));
+							output.addChild(Cell('D'));
+							output.addChild(Cell('E'));
+						}
+					});
+
+					apr_root.addChild(SetupIcon(refresh, 'proposta', 5, 100));
+					var proposta = null;
+					refresh.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+						if (!proposta) {
+							proposta = apr.addChild(new Hexget(Cell('proposta')));
+							proposta.addChild(Cell('A'));
+							proposta.addChild(Cell('B'));
+							proposta.addChild(Cell('C'));
+						}
+					});
 				}
 			});
 
-			root.addChild(SetupIcon(calculator, 'calculadora', 1));
-			root.addChild(SetupIcon(calendar, 'calendario', 2));
-			root.addChild(SetupIcon(clock, 'relogio', 3));
-			root.addChild(SetupIcon(globe, 'internet', 4));
-			root.addChild(SetupIcon(mail, 'email', 5));
+			root.addChild(SetupIcon(mail, 'email', 1));
+
+			root.addChild(SetupIcon(calculator, 'calculadora', 2));
+			root.addChild(SetupIcon(calendar, 'calendario', 3));
+			root.addChild(SetupIcon(clock, 'relogio', 4));
+			root.addChild(SetupIcon(globe, 'internet', 5));
 			root.addChild(SetupIcon(music, 'musica', 6));
 			root.addChild(SetupIcon(settings, 'configuracoes', 7));
 		}
@@ -172,10 +232,10 @@ package {
 			}
 		}
 
-		private function SetupIcon(src:Sprite, title:String, idx:uint):Sprite {
+		private function SetupIcon(src:Sprite, title:String, idx:uint, r:Number = 150):Sprite {
 			var ang:Number = idx * (Math.PI / 4);
-			src.x = 150 * Math.cos(ang) - 25;
-			src.y = 150 * Math.sin(ang) - 25;
+			src.x = r * Math.cos(ang) - 25;
+			src.y = r * Math.sin(ang) - 25;
 
 			src.transform.colorTransform = new Hexlay();
 			src.scaleX = src.scaleY = 1.5625;
