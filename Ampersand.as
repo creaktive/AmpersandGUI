@@ -25,7 +25,44 @@ package {
 	import OHTI;
 
 	public class Ampersand extends Sprite {
+		[Embed(source='ampersand.svg')]
+		private var logoClass:Class;
+		private var logo:Sprite = new logoClass();
+
+		[Embed(source='book_text.svg')]
+		private var bookClass:Class;
+		private var book:Sprite = new bookClass();
+
+		[Embed(source='calculator.svg')]
+		private var calculatorClass:Class;
+		private var calculator:Sprite = new calculatorClass();
+
+		[Embed(source='calendar.svg')]
+		private var calendarClass:Class;
+		private var calendar:Sprite = new calendarClass();
+
+		[Embed(source='clock.svg')]
+		private var clockClass:Class;
+		private var clock:Sprite = new clockClass();
+
+		[Embed(source='globe.svg')]
+		private var globeClass:Class;
+		private var globe:Sprite = new globeClass();
+
+		[Embed(source='mail.svg')]
+		private var mailClass:Class;
+		private var mail:Sprite = new mailClass();
+
+		[Embed(source='music.svg')]
+		private var musicClass:Class;
+		private var music:Sprite = new musicClass();
+
+		[Embed(source='settings.svg')]
+		private var settingsClass:Class;
+		private var settings:Sprite = new settingsClass();
+
 		private var container:Sprite = new Sprite();
+
 		private var topmost:Hexget;
 		private var path:Array = new Array();
 		private var view:Hexaffine;
@@ -52,8 +89,6 @@ package {
 			stage.addEventListener(MouseEvent.MIDDLE_CLICK, function (e:MouseEvent):void {
 				Broadcaster.dispatchEvent(new Event(Hexagram.FONTSWAP));
 			});
-
-			addChild(new Hexagram('puta que o pariu', 25, 400, false, TextFieldType.INPUT, TextFormatAlign.LEFT));
 		}
 
 		private function InitView():void {
@@ -69,25 +104,14 @@ package {
 			port.graphics.endFill;
 			screen.mask = port;
 
-			topmost = new Hexget(Cell('PRINCIPAL'), 250);
+			var root:Sprite = Cell("ampersand v0.1");
+			topmost = new Hexget(root, 250);
 			screen.addChild(topmost);
 
 			var border:Shape = new Shape();
 			screen.addChild(border)
 			border.graphics.lineStyle(0, Hexlay.color_front, 1.0);
 			border.graphics.drawCircle(0, 0, 250);
-
-
-			var sub = topmost.addChild(new Hexget(Cell('NIVEL 2 A')));
-			sub.addChild(Cell('NIVEL 2 B'));
-			sub.addChild(Cell('NIVEL 2 C'));
-
-			var sub2 = sub.addChild(new Hexget(Cell('NIVEL 3 A')));
-			sub2.addChild(Cell('NIVEL 3 B'));
-
-			for (var i:uint = 1; i < 10; i++)
-				topmost.addChild(Cell('NIVEL 1 ' + i));
-
 
 			addEventListener(Hexsel.HEXSEL, function (e:Hexsel):void {
 				path.push(e.params);
@@ -102,6 +126,42 @@ package {
 				if ((e.scaleX + e.scaleY) / 2 < 0.8)
 					Unzoom();
 			});
+
+			/*
+			var sub = topmost.addChild(new Hexget(Cell('NIVEL 2 A')));
+			sub.addChild(Cell('NIVEL 2 B'));
+			sub.addChild(Cell('NIVEL 2 C'));
+
+			var sub2 = sub.addChild(new Hexget(Cell('NIVEL 3 A')));
+			sub2.addChild(Cell('NIVEL 3 B'));
+
+			for (var i:uint = 1; i < 10; i++)
+				topmost.addChild(Cell('NIVEL 1 ' + i));
+
+			addChild(new Hexagram('puta que o pariu', 25, 400, false, TextFieldType.INPUT, TextFormatAlign.LEFT));
+			*/
+
+			root.addChild(logo);
+			logo.x = logo.y = -250;
+			logo.transform.colorTransform = new Hexlay();
+			logo.alpha = 0.1;
+
+			root.addChild(SetupIcon(book, 'apresentacao', 0));
+			var started:Boolean = false;
+			book.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+				if (!started) {
+					started = true;
+					topmost.addChild(Cell('NIVEL 1'));
+				}
+			});
+
+			root.addChild(SetupIcon(calculator, 'calculadora', 1));
+			root.addChild(SetupIcon(calendar, 'calendario', 2));
+			root.addChild(SetupIcon(clock, 'relogio', 3));
+			root.addChild(SetupIcon(globe, 'internet', 4));
+			root.addChild(SetupIcon(mail, 'email', 5));
+			root.addChild(SetupIcon(music, 'musica', 6));
+			root.addChild(SetupIcon(settings, 'configuracoes', 7));
 		}
 
 		private function Unzoom():void {
@@ -112,11 +172,39 @@ package {
 			}
 		}
 
+		private function SetupIcon(src:Sprite, title:String, idx:uint):Sprite {
+			var ang:Number = idx * (Math.PI / 4);
+			src.x = 150 * Math.cos(ang) - 25;
+			src.y = 150 * Math.sin(ang) - 25;
+
+			src.transform.colorTransform = new Hexlay();
+			src.scaleX = src.scaleY = 1.5625;
+
+			var hit:Sprite = new Sprite();
+			src.addChild(hit);
+			hit.visible = false;
+			src.hitArea = hit;
+
+			var bg:Shape = new Shape();
+			hit.addChild(bg);
+
+			bg.graphics.lineStyle(0, 0xffffff, 1.0);
+			bg.graphics.beginFill(0xffffff, 1.0);
+			bg.graphics.drawCircle(12.5, 12.5, 25);
+			bg.graphics.endFill;
+
+			var txt:Hexagram = new Hexagram(title, 14);
+			src.addChild(txt);
+			txt.mouseEnabled = false;
+			txt.width = 100;
+			txt.x = -37.5;
+			txt.y = 30;
+
+			return src;
+		}
+
 		private function Cell(str:String):Sprite {
 			var cell:Sprite = new Sprite();
-			cell.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
-				trace('test');
-			});
 
 			var bg:Shape = new Shape();
 			cell.addChild(bg);
@@ -125,11 +213,10 @@ package {
 			bg.graphics.drawCircle(0, 0, 400);
 			bg.graphics.endFill;
 
-			var txt:Hexagram = new Hexagram(str);
+			var txt:Hexagram = new Hexagram(str, 40, 500, true);
 			cell.addChild(txt);
-			txt.width = 500;
 			txt.x = -250;
-			txt.y = -35;
+			txt.y = -225;
 
 			return cell;
 		}
