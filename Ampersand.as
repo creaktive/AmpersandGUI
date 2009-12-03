@@ -13,6 +13,7 @@ package {
 	import flash.display.*;
 	import flash.events.*
 	import flash.geom.*;
+	import flash.net.*;
 	import flash.ui.*;
 	import flash.text.*;
 
@@ -88,7 +89,7 @@ package {
 		public function Ampersand():void {
 			stage.quality		= StageQuality.HIGH;
 			stage.scaleMode		= StageScaleMode.SHOW_ALL;
-			//stage.displayState	= StageDisplayState.FULL_SCREEN;
+			stage.displayState	= StageDisplayState.FULL_SCREEN;
 
 			Multitouch.inputMode = MultitouchInputMode.GESTURE;
 
@@ -102,9 +103,12 @@ package {
 			InitView();
 			InitMenu();
 
-			stage.addEventListener(MouseEvent.MIDDLE_CLICK, function (e:MouseEvent):void {
-				Broadcaster.dispatchEvent(new Event(Hexagram.FONTSWAP));
-			});
+			stage.addEventListener(MouseEvent.MIDDLE_CLICK, SwapFont);
+			stage.addEventListener(GestureEvent.GESTURE_TWO_FINGER_TAP, SwapFont);
+		}
+
+		private function SwapFont(e:Event):void {
+			Broadcaster.dispatchEvent(new Event(Hexagram.FONTSWAP));
 		}
 
 		private function InitView():void {
@@ -143,78 +147,104 @@ package {
 					Unzoom();
 			});
 
-			/*
-			addChild(new Hexagram('puta que o pariu', 25, 400, false, TextFieldType.INPUT, TextFormatAlign.LEFT));
-			*/
-
 			root.addChild(logo);
 			logo.x = logo.y = -250;
-			logo.transform.colorTransform = new Hexlay();
-			logo.alpha = 0.1;
+			var clr:ColorTransform = logo.transform.colorTransform;
+			clr.color = Hexlay.color_half;
+			logo.transform.colorTransform = clr;
 
 			root.addChild(SetupIcon(book, 'apresentacao', 0));
-			var started:Boolean = false;
+			var apr_root = null;
 			book.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
-				if (!started) {
-					started = true;
+				if (apr_root)
+					return;
 
-					var apr_root:Sprite = Cell('apresentacao');
-					var apr = topmost.addChild(new Hexget(apr_root));
+				apr_root = Cell('apresentacao');
+				var apr = topmost.addChild(new Hexget(apr_root));
 
-					apr_root.addChild(SetupIcon(questionmark, 'paradigmas', 7, 100));
-					var paradigmas = null;
-					questionmark.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
-						if (!paradigmas) {
-							paradigmas = apr.addChild(new Hexget(Cell('paradigmas')));
-							paradigmas.addChild(Cell('A'));
-							paradigmas.addChild(Cell('B'));
-							paradigmas.addChild(Cell('C'));
-							paradigmas.addChild(Cell('D'));
-						}
-					});
+				apr_root.addChild(SetupIcon(questionmark, 'paradigmas', 7, 100));
+				var paradigmas = null;
+				questionmark.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+					if (paradigmas)
+						return;
 
-					apr_root.addChild(SetupIcon(download, 'input', 1, 100));
-					var input = null;
-					download.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
-						if (!input) {
-							input = apr.addChild(new Hexget(Cell('input')));
-							input.addChild(Cell('A'));
-							input.addChild(Cell('B'));
-							input.addChild(Cell('C'));
-							input.addChild(Cell('D'));
-							input.addChild(Cell('E'));
-							input.addChild(Cell('F'));
-							input.addChild(Cell('G'));
-						}
-					});
+					paradigmas = apr.addChild(new Hexget(LoadImage('screens/intro1.png', "formacao\nda linguagem")));
+					paradigmas.addChild(LoadImage('screens/intro2.png', "simbologia\nadquirida"));
+					paradigmas.addChild(LoadImage('screens/intro3.png', "simbologia\nadquirida"));
+					paradigmas.addChild(LoadImage('screens/intro4.png', "linguagem\nsintetica"));
+				});
 
-					apr_root.addChild(SetupIcon(upload, 'output', 3, 100));
-					var output = null;
-					upload.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
-						if (!output) {
-							output = apr.addChild(new Hexget(Cell('output')));
-							output.addChild(Cell('A'));
-							output.addChild(Cell('B'));
-							output.addChild(Cell('C'));
-							output.addChild(Cell('D'));
-							output.addChild(Cell('E'));
-						}
-					});
+				apr_root.addChild(SetupIcon(download, 'input', 1, 100));
+				var input = null;
+				download.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+					if (input)
+						return;
 
-					apr_root.addChild(SetupIcon(refresh, 'proposta', 5, 100));
-					var proposta = null;
-					refresh.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
-						if (!proposta) {
-							proposta = apr.addChild(new Hexget(Cell('proposta')));
-							proposta.addChild(Cell('A'));
-							proposta.addChild(Cell('B'));
-							proposta.addChild(Cell('C'));
-						}
-					});
-				}
+					input = apr.addChild(new Hexget(LoadImage('screens/input1.png', "precursor do\nteclado - 1858")));
+					input.addChild(LoadImage('screens/input2.png', "mecanismo\ndo piano"));
+					input.addChild(LoadImage('screens/input3.png', "sketchpad\nem uso - 1963"));
+					input.addChild(LoadImage('screens/input4.png', "terminal\ndo sistema sage"));
+					input.addChild(LoadImage('screens/input5.png', "prototipo\ndo mouse - 1963"));
+					input.addChild(LoadImage('screens/input6.png', "demonstracao\ndo nls - 1968"));
+					input.addChild(LoadImage('screens/input7.png', "edicao dos\nefeitos cg em\nstar wars iv - 1977"));
+				});
+
+				apr_root.addChild(SetupIcon(upload, 'output', 3, 100));
+				var output = null;
+				upload.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+					if (output)
+						return;
+
+					output = apr.addChild(new Hexget(LoadImage('screens/output1.png', "precursor do\nfax - 1848")));
+					output.addChild(LoadImage('screens/output2.png', "electronic\ngraphics\nh franke - 1961"));
+					output.addChild(LoadImage('screens/output3.png', "star-icons\n1981"));
+					output.addChild(LoadImage('screens/output4.png', "propaganda\nxerox star - 1981"));
+				});
+
+				apr_root.addChild(SetupIcon(refresh, 'proposta', 5, 100));
+				var proposta = null;
+				refresh.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+					if (proposta)
+						return;
+
+					proposta = apr.addChild(new Hexget(LoadImage('screens/new1.swf', "display\nde 16 segmentos\nmodificado")));
+					proposta.addChild(LoadImage('screens/new2.png', "disco\mtelefonico"));
+					proposta.addChild(LoadImage('screens/new3.swf', "histograma\nda distribuicao\nde acertos"));
+				});
 			});
 
 			root.addChild(SetupIcon(mail, 'email', 1));
+			var eml_root = null;
+			mail.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
+				if (eml_root)
+					return;
+
+				eml_root = Cell("compor\nmensagem");
+				topmost.addChild(eml_root);
+
+				var tmp;
+
+				tmp = eml_root.addChild(new Hexagram('de', 28, 70, true));
+				tmp.x = -200;
+				tmp.y = -125;
+
+				tmp = eml_root.addChild(new Hexagram('stas@sysd.org', 28, 250, false, TextFieldType.INPUT, TextFormatAlign.LEFT));
+				tmp.x = -125;
+				tmp.y = -125;
+
+				tmp = eml_root.addChild(new Hexagram('para', 28, 70, true));
+				tmp.x = -200;
+				tmp.y = -75;
+
+				tmp = eml_root.addChild(new Hexagram('creaktive@gmail.com', 28, 250, false, TextFieldType.INPUT, TextFormatAlign.LEFT));
+				tmp.x = -125;
+				tmp.y = -75;
+
+				tmp = eml_root.addChild(new Hexagram('mensagem', 28, 250, false, TextFieldType.INPUT, TextFormatAlign.LEFT));
+				tmp.x = -125;
+				tmp.y = -25;
+				tmp.height = 28 * 8;
+			});
 
 			root.addChild(SetupIcon(calculator, 'calculadora', 2));
 			root.addChild(SetupIcon(calendar, 'calendario', 3));
@@ -261,6 +291,24 @@ package {
 			txt.y = 30;
 
 			return src;
+		}
+
+		private function LoadImage(src:String, title:String):Sprite {
+			var cell:Sprite = Cell(title);
+
+			var ldr:Loader = new Loader();
+			ldr.load(new URLRequest(src));
+
+			ldr.contentLoaderInfo.addEventListener(Event.COMPLETE, function (e:Event):void {
+				var img:Bitmap = Bitmap(e.target.content);
+				cell.addChild(img);
+				img.smoothing = true;
+
+				img.x = Math.round(img.width / -2);
+				img.y = Math.round(img.height / -2) + 25;	// TextField(cell.getChildAt(1)).textHeight;
+			});
+
+			return cell;
 		}
 
 		private function Cell(str:String):Sprite {

@@ -54,7 +54,14 @@ package {
 			text				= str;
 			type				= type_;
 			width				= width_;
+			//height				= size_ * 4;
 			wordWrap			= true;
+
+			if (type_ == TextFieldType.INPUT) {
+				border			= true;
+				borderColor		= Hexlay.color_half;
+				height			= size_ + 4;
+			}
 
 			Broadcaster.addEventListener(FONTSWAP, function (e:Event):void {
 				defaultTextFormat = fonts[++i % fonts.length];
