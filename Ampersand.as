@@ -103,12 +103,14 @@ package {
 			InitView();
 			InitMenu();
 
-			stage.addEventListener(MouseEvent.MIDDLE_CLICK, SwapFont);
-			stage.addEventListener(GestureEvent.GESTURE_TWO_FINGER_TAP, SwapFont);
-		}
+			stage.addEventListener(MouseEvent.MIDDLE_CLICK, function (e:MouseEvent):void {
+				Broadcaster.dispatchEvent(new Event(Hexagram.FONTSWAP));
+			});
 
-		private function SwapFont(e:Event):void {
-			Broadcaster.dispatchEvent(new Event(Hexagram.FONTSWAP));
+			stage.addEventListener(PressAndTapGestureEvent.GESTURE_PRESS_AND_TAP, function (e:PressAndTapGestureEvent):void {
+				if (e.phase == 'begin')
+					Broadcaster.dispatchEvent(new Event(Hexagram.FONTSWAP));
+			});
 		}
 
 		private function InitView():void {
@@ -300,9 +302,14 @@ package {
 			ldr.load(new URLRequest(src));
 
 			ldr.contentLoaderInfo.addEventListener(Event.COMPLETE, function (e:Event):void {
-				var img:Bitmap = Bitmap(e.target.content);
+				var img;
+				if (e.target.content is Bitmap) {
+					img = Bitmap(e.target.content);
+					img.smoothing = true;
+				} else
+					img = e.target.content;
+
 				cell.addChild(img);
-				img.smoothing = true;
 
 				img.x = Math.round(img.width / -2);
 				img.y = Math.round(img.height / -2) + 25;	// TextField(cell.getChildAt(1)).textHeight;
@@ -370,7 +377,8 @@ package {
 			});
 
 			stage.addEventListener(TransformGestureEvent.GESTURE_ROTATE, function (e:TransformGestureEvent):void {
-				input.Impulse(e.rotation);
+				if ((Math.abs(e.rotation) > 0) && (Math.abs(e.rotation) < 30))
+					input.Impulse(e.rotation / 2);
 			});
 		}
 

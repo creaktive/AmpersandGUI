@@ -54,6 +54,13 @@ package {
 			cell.addChild(child);
 			cell.addChild(cell.mask);
 
+			var bg:Shape = new Shape();
+			cell.addChild(bg);
+			bg.graphics.lineStyle(0, 0x0000ff, 0.0);
+			bg.graphics.beginFill(0x0000ff, 0.0);
+			bg.graphics.drawCircle(0, 0, l);
+			bg.graphics.endFill;
+
 			cell.mouseChildren = false;
 			cell.addEventListener(MouseEvent.CLICK, selector);
 
