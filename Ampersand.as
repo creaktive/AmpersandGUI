@@ -114,8 +114,8 @@ package {
 
 			var port:Shape = new Shape();
 			screen.addChild(port);
-			port.graphics.lineStyle(0, 0xffffff, 1.0);
-			port.graphics.beginFill(0xffffff, 1.0);
+			port.graphics.lineStyle(0, 0xffffff);
+			port.graphics.beginFill(0xffffff);
 			port.graphics.drawCircle(0, 0, 251);
 			port.graphics.endFill;
 			screen.mask = port;
@@ -126,7 +126,7 @@ package {
 
 			var border:Shape = new Shape();
 			screen.addChild(border)
-			border.graphics.lineStyle(0, Hexlay.color_front, 1.0);
+			border.graphics.lineStyle(0, Hexlay.color_front);
 			border.graphics.drawCircle(0, 0, 250);
 
 			addEventListener(Hexsel.HEXSEL, function (e:Hexsel):void {
@@ -248,8 +248,8 @@ package {
 			var bg:Shape = new Shape();
 			hit.addChild(bg);
 
-			bg.graphics.lineStyle(0, 0xffffff, 1.0);
-			bg.graphics.beginFill(0xffffff, 1.0);
+			bg.graphics.lineStyle(0, 0xffffff);
+			bg.graphics.beginFill(0xffffff);
 			bg.graphics.drawCircle(12.5, 12.5, 25);
 			bg.graphics.endFill;
 
@@ -268,8 +268,8 @@ package {
 
 			var bg:Shape = new Shape();
 			cell.addChild(bg);
-			bg.graphics.lineStyle(0, Hexlay.color_back, 1.0);
-			bg.graphics.beginFill(Hexlay.color_back, 1.0);
+			bg.graphics.lineStyle(0, Hexlay.color_back);
+			bg.graphics.beginFill(Hexlay.color_back);
 			bg.graphics.drawCircle(0, 0, 400);
 			bg.graphics.endFill;
 

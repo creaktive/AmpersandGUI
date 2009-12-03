@@ -54,13 +54,6 @@ package {
 			cell.addChild(child);
 			cell.addChild(cell.mask);
 
-			var bg:Shape = new Shape();
-			cell.addChild(bg);
-			bg.graphics.lineStyle(0, 0x0000ff, 0.0);
-			bg.graphics.beginFill(0x0000ff, 0.0);
-			bg.graphics.drawCircle(0, 0, l);
-			bg.graphics.endFill;
-
 			cell.mouseChildren = false;
 			cell.addEventListener(MouseEvent.CLICK, selector);
 
@@ -69,10 +62,16 @@ package {
 			holder.push(new Array(child, cell));
 
 			level();
+
+			overview();
+
 			return child;
 		}
 
 		private function selector(e:Event):void {
+			if (hasEventListener(Event.ENTER_FRAME))
+				return;
+
 			for each (var i:Array in holder) {
 				i[1].removeEventListener(MouseEvent.CLICK, selector);
 

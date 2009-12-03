@@ -30,8 +30,8 @@ package {
 
 		public function Spot(str:String, font_:uint = 0) {
 			addChild(bg);
-			bg.graphics.lineStyle(0, Hexlay.color_front, 1.0);
-			bg.graphics.beginFill(Hexlay.color_back, 1.0);
+			bg.graphics.lineStyle(0, Hexlay.color_front);
+			bg.graphics.beginFill(Hexlay.color_back);
 			bg.graphics.drawCircle(0, 0, 50);
 			bg.graphics.endFill;
 

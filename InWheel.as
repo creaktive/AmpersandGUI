@@ -81,8 +81,8 @@ package {
 			var step:Number = Math.PI / 50;
 
 			var cr:Shape = new Shape();
-			cr.graphics.lineStyle(0, 0xffffff, 0.1);
-			cr.graphics.beginFill(0xffffff, 0.1);
+			cr.graphics.lineStyle(0, 0xffffff);
+			cr.graphics.beginFill(0xffffff);
 
 
 			// outer
