@@ -43,7 +43,7 @@ package {
 		}
 
 		private function Shrink(e:Event):void {
-			radius -= 10;
+			radius -= 20;
 			if (radius <= 175) {
 				removeEventListener(Event.ENTER_FRAME, Shrink);
 				radius = 175;
@@ -68,7 +68,7 @@ package {
 		}
 
 		private function Grow(e:Event):void {
-			radius += 10;
+			radius += 20;
 			if (radius >= 275) {
 				removeEventListener(Event.ENTER_FRAME, Grow);
 				radius = 275;
