@@ -1,8 +1,8 @@
-10.1beta/*
+SDK/*
 Ampersand.swf
 Hexagram.ttf
 screens/*.png
 screens/*.swf
-*.airi
+*.air*
 *.bak
 *.sqlite

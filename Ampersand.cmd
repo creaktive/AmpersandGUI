@@ -1,1 +1,1 @@
-@10.1beta\adl.exe -runtime 10.1beta -nodebug Ampersand-app.xml .
+@SDK\bin\adl.exe -runtime SDK\runtimes\air\win -nodebug Ampersand-app.xml .
