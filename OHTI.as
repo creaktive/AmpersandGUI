@@ -10,6 +10,9 @@ package {
 		private var sql:SQLConnection = new SQLConnection();
 		private var alf:Array = new Array();
 
+		private var lstr:String = null;
+		private var keys:Array = new Array();
+
 		public function OHTI() {
 			sql.open(File.applicationDirectory.resolvePath('ptbr.sqlite'), SQLMode.READ);
 
@@ -23,11 +26,14 @@ package {
 		}
 
 		public function next(str:String):Array {
-			str = str.toLowerCase();
+			if (str == lstr)
+				return keys;
+
+			lstr = new String(str.toLowerCase());
 
 			var tri:Dictionary = new Dictionary();
-			var a:String = str.length >= 2 ? str.charAt(str.length - 2) : '';
-			var b:String = str.length >= 1 ? str.charAt(str.length - 1) : '';
+			var a:String = lstr.length >= 2 ? lstr.charAt(lstr.length - 2) : '';
+			var b:String = lstr.length >= 1 ? lstr.charAt(lstr.length - 1) : '';
 
 			var q:SQLStatement = new SQLStatement();
 			q.sqlConnection = sql;
@@ -50,14 +56,14 @@ package {
 
 			var dic:Dictionary = new Dictionary();
 			var dicsum:uint = 0;
-			if (str.length > 1) {
-				var last:uint = str.charCodeAt(str.length - 1);
-				var ustr:String = new String(str.substr(0, str.length - 1) + String.fromCharCode(last + 1));
-				q.text = "SELECT w,n FROM dic WHERE (w > '" + str + "') AND (w < '" + ustr + "') ORDER BY n DESC, w";
+			if (lstr.length > 1) {
+				var last:uint = lstr.charCodeAt(lstr.length - 1);
+				var ustr:String = new String(lstr.substr(0, lstr.length - 1) + String.fromCharCode(last + 1));
+				q.text = "SELECT w,n FROM dic WHERE (w > '" + lstr + "') AND (w < '" + ustr + "') ORDER BY n DESC, w";
 				q.execute();
 				r = q.getResult();
 				for each (var row:Object in r.data) {
-					var chr:String = row['w'].charAt(str.length);
+					var chr:String = row['w'].charAt(lstr.length);
 					if (dic[chr] == undefined)
 						dic[chr] = row['n'];
 					else
@@ -76,7 +82,7 @@ package {
 			for (var chr:String in dic)
 				nxt[chr] += dic[chr] / dicsum;
 
-			var keys:Array = new Array();
+			keys.splice(0);
 			for (var k:String in nxt)
 				keys.push({chr:k, idx:nxt[k]});
 
@@ -85,10 +91,10 @@ package {
 		}
 
 		public function nextChr(str:String, upper:Boolean = false):Array {
-			var keys:Array = new Array();
+			var chrs:Array = new Array();
 			for each (var i:Object in next(str))
-				keys.push(upper ? i['chr'].toUpperCase() : i['chr']);
-			return keys;
+				chrs.push(upper ? i['chr'].toUpperCase() : i['chr']);
+			return chrs;
 		}
 	}
 }

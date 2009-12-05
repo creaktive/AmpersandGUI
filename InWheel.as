@@ -4,13 +4,12 @@ package {
 
 	import com.pixelwelders.events.Broadcaster;
 
+	import FontSwapper;
 	import Spot;
 
 	public class InWheel extends Sprite {
 		private var seq:Array = new Array();
 		private var idx:Number = 0.0;
-
-		private var font_index:uint = 0;
 
 		private var speed:Number = 0;
 		private var radius:Number = 275;
@@ -21,10 +20,6 @@ package {
 			var myMask:Shape = drawCrescent();
 			addChild(myMask);
 			mask = myMask;
-
-			Broadcaster.addEventListener(Hexagram.FONTSWAP, function (e:Event):void {
-				++font_index;
-			});
 
 			Reload(list);
 		}
@@ -54,7 +49,7 @@ package {
 				seq.splice(0);
 
 				for each (var str:String in new_list) {
-					var btn:Spot = new Spot(str, font_index);
+					var btn:Spot = new Spot(str);
 					addChild(btn);
 
 					seq.push(btn);

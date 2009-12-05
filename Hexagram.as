@@ -5,31 +5,11 @@ package {
 
 	import com.pixelwelders.events.Broadcaster;
 
+	import FontSwapper;
 	import Hexlay;
 
 	public class Hexagram extends TextField {
-		[
-			Embed(
-				source		= 'Hexagram.ttf',
-				fontName	= 'Hexagram',
-				mimeType	= 'application/x-font-truetype'
-			)
-		]
-		public static const Hexagram:String;
-
-		[
-			Embed(
-				source		= 'TRANA___.TTF',
-				fontName	= 'SixteenSegments',
-				mimeType	= 'application/x-font-truetype'
-			)
-		]
-		public static const SixteenSegments:String;
-
-		public static const FONTSWAP:String = 'HEXAGRAM_FONTSWAP';
-
 		private var fonts:Array = new Array();
-		private var i:uint = 0;
 
 		public function Hexagram(str:String, size_:Number = 50, width_:Number = 400, bold_:Boolean = false, type_:String = TextFieldType.DYNAMIC, align_:String = TextFormatAlign.CENTER) {
 			fonts[0]			= new TextFormat();
@@ -48,7 +28,7 @@ package {
 
 			antiAliasType		= AntiAliasType.ADVANCED;
 			blendMode			= BlendMode.LAYER;
-			defaultTextFormat	= fonts[i];
+			defaultTextFormat	= fonts[FontSwapper.CurrentFont];
 			embedFonts			= true;
 			selectable			= true;
 			text				= str;
@@ -63,16 +43,10 @@ package {
 				height			= size_ + 4;
 			}
 
-			Broadcaster.addEventListener(FONTSWAP, function (e:Event):void {
-				defaultTextFormat = fonts[++i % fonts.length];
+			Broadcaster.addEventListener(FontSwapper.FONTSWAP, function (e:Event):void {
+				defaultTextFormat = fonts[FontSwapper.CurrentFont];
 				text = text;
 			});
-		}
-
-		public function swap(i_:uint) {
-			i = i_ % fonts.length;
-			defaultTextFormat = fonts[i];
-			text = text;
 		}
 	}
 }

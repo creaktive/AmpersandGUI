@@ -28,7 +28,7 @@ package {
 		private var bg:Shape = new Shape();
 		private var txt:Hexagram;
 
-		public function Spot(str:String, font_:uint = 0) {
+		public function Spot(str:String) {
 			addChild(bg);
 			bg.graphics.lineStyle(0, Hexlay.color_front);
 			bg.graphics.beginFill(Hexlay.color_back);
@@ -82,9 +82,6 @@ package {
 				txt.width = 100;
 				txt.x = -47;
 				txt.y = -65;
-
-				if (font_)
-					txt.swap(font_);
 
 				var chr:uint = str.charCodeAt(0);
 				addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {

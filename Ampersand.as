@@ -17,8 +17,7 @@ package {
 	import flash.ui.*;
 	import flash.text.*;
 
-	import com.pixelwelders.events.Broadcaster;
-
+	import FontSwapper;
 	import Hexagram;
 	import Hexget;
 	import Hexlay;
@@ -104,12 +103,12 @@ package {
 			InitMenu();
 
 			stage.addEventListener(MouseEvent.MIDDLE_CLICK, function (e:MouseEvent):void {
-				Broadcaster.dispatchEvent(new Event(Hexagram.FONTSWAP));
+				FontSwapper.swap();
 			});
 
 			stage.addEventListener(PressAndTapGestureEvent.GESTURE_PRESS_AND_TAP, function (e:PressAndTapGestureEvent):void {
 				if (e.phase == 'begin')
-					Broadcaster.dispatchEvent(new Event(Hexagram.FONTSWAP));
+					FontSwapper.swap();
 			});
 		}
 
@@ -337,16 +336,20 @@ package {
 		}
 
 		private function InitMenu():void {
-			var input:InWheel = new InWheel(ohti.nextChr(''));
+			var lastword:String = '';
+			var input:InWheel = new InWheel(ohti.nextChr(lastword));
 			input.y = 25;
 			container.addChild(input);
 
 			stage.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
-				if (stage.focus is TextField) {
+				if ((e.target == stage.focus) && (stage.focus is TextField)) {
 					var tf:TextField = TextField(stage.focus);
 					if (tf.type == TextFieldType.INPUT) {
 						var cw:Object = CurrentWord(tf);
-						input.Reload(ohti.nextChr(cw['word']));
+						if (lastword != cw['word']) {
+							input.Reload(ohti.nextChr(cw['word']));
+							lastword = cw['word'];
+						}
 					}
 				}
 			});
@@ -358,12 +361,11 @@ package {
 						var chr:String = String.fromCharCode(e.charCode);
 
 						var cw:Object = CurrentWord(tf);
-
 						if (e.charCode == Keyboard.BACKSPACE) {
 							tf.text = tf.text.substring(0, cw['to'] - 1) + tf.text.substring(cw['to']);
 							tf.setSelection(cw['to'] - 1, cw['to'] - 1);
 							input.Reload(ohti.nextChr(cw['word'].substring(0, -1)));
-						} else {
+						} else if (e.charCode) {
 							tf.text = tf.text.substring(0, cw['to']) + chr + tf.text.substring(cw['to']);
 							tf.setSelection(cw['to'] + 1, cw['to'] + 1);
 							input.Reload(ohti.nextChr(cw['word'] + chr));
@@ -399,6 +401,11 @@ package {
 					break;
 			}
 			var to:uint = i;
+
+			if (from < 0)
+				from = 0;
+			if (to > tf.text.length)
+				to = tf.text.length - 1;
 
 			return { word: tf.text.substring(from, to), from: from, to: to };
 		}
