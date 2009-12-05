@@ -169,6 +169,9 @@ package {
 					if (paradigmas)
 						return;
 
+					if (apr.numChildren > 1)
+						Unzoom();
+
 					paradigmas = apr.addChild(new Hexget(LoadImage('screens/intro1.png', "formacao\nda linguagem")));
 					paradigmas.addChild(LoadImage('screens/intro2.png', "simbologia\nadquirida"));
 					paradigmas.addChild(LoadImage('screens/intro3.png', "simbologia\nadquirida"));
@@ -180,6 +183,9 @@ package {
 				download.addEventListener(MouseEvent.CLICK, function (e:MouseEvent):void {
 					if (input)
 						return;
+
+					if (apr.numChildren > 1)
+						Unzoom();
 
 					input = apr.addChild(new Hexget(LoadImage('screens/input1.png', "precursor do\nteclado - 1858")));
 					input.addChild(LoadImage('screens/input2.png', "mecanismo\ndo piano"));
@@ -196,6 +202,9 @@ package {
 					if (output)
 						return;
 
+					if (apr.numChildren > 1)
+						Unzoom();
+
 					output = apr.addChild(new Hexget(LoadImage('screens/output1.png', "precursor do\nfax - 1848")));
 					output.addChild(LoadImage('screens/output2.png', "electronic\ngraphics\nh franke - 1961"));
 					output.addChild(LoadImage('screens/output3.png', "star-icons\n1981"));
@@ -208,10 +217,16 @@ package {
 					if (proposta)
 						return;
 
+					if (apr.numChildren > 1)
+						Unzoom();
+
 					proposta = apr.addChild(new Hexget(LoadImage('screens/new1.swf', "display\nde 16 segmentos\nmodificado")));
 					proposta.addChild(LoadImage('screens/new2.png', "disco\ntelefonico"));
 					proposta.addChild(LoadImage('screens/new3.swf', "histograma\nda distribuicao\nde acertos"));
 				});
+
+				if (topmost.numChildren > 1)
+					Unzoom();
 			});
 
 			root.addChild(SetupIcon(mail, 'email', 1));
@@ -245,6 +260,9 @@ package {
 				tmp.x = -125;
 				tmp.y = -25;
 				tmp.height = 28 * 8;
+
+				if (topmost.numChildren > 1)
+					Unzoom();
 			});
 
 			root.addChild(SetupIcon(calculator, 'calculadora', 2));

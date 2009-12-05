@@ -54,15 +54,17 @@ package {
 			cell.addChild(child);
 			cell.addChild(cell.mask);
 
-			var bg:Shape = new Shape();
-			cell.addChild(bg);
-			bg.graphics.lineStyle(0, 0x0000ff, 0.0);
-			bg.graphics.beginFill(0x0000ff, 0.0);
-			bg.graphics.drawCircle(0, 0, l);
-			bg.graphics.endFill;
+			if (numChildren) {
+				var bg:Shape = new Shape();
+				cell.addChild(bg);
+				bg.graphics.lineStyle(0, 0x0000ff, 0.0);
+				bg.graphics.beginFill(0x0000ff, 0.0);
+				bg.graphics.drawCircle(0, 0, l);
+				bg.graphics.endFill;
 
-			cell.mouseChildren = false;
-			cell.addEventListener(MouseEvent.CLICK, selector);
+				cell.mouseChildren = false;
+				cell.addEventListener(MouseEvent.CLICK, selector);
+			}
 
 			comb.addChild(cell);
 
@@ -77,6 +79,9 @@ package {
 
 		private function selector(e:Event):void {
 			if (hasEventListener(Event.ENTER_FRAME))
+				return;
+
+			if (e.eventPhase != 2)
 				return;
 
 			for each (var i:Array in holder) {
@@ -98,12 +103,13 @@ package {
 		}
 
 		public function overview():void {
-			for each (var i:Array in holder) {
-				i[1].removeEventListener(MouseEvent.CLICK, selector);
-				i[1].addEventListener(MouseEvent.CLICK, selector);
-				i[1].mouseChildren = false;
-				i[1].visible = true;
-			}
+			if (numChildren > 1)
+				for each (var i:Array in holder) {
+					i[1].removeEventListener(MouseEvent.CLICK, selector);
+					i[1].addEventListener(MouseEvent.CLICK, selector);
+					i[1].mouseChildren = false;
+					i[1].visible = true;
+				}
 		}
 
 		public override function removeChild(child:DisplayObject):DisplayObject {
@@ -129,6 +135,10 @@ package {
 
 			level();
 			return child;
+		}
+
+		public override function get numChildren():int {
+			return holder.length;
 		}
 
 		public function level():uint {
