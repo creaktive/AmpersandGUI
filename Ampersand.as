@@ -210,7 +210,7 @@ package {
 						return;
 
 					proposta = apr.addChild(new Hexget(LoadImage('screens/new1.swf', "display\nde 16 segmentos\nmodificado")));
-					proposta.addChild(LoadImage('screens/new2.png', "disco\mtelefonico"));
+					proposta.addChild(LoadImage('screens/new2.png', "disco\ntelefonico"));
 					proposta.addChild(LoadImage('screens/new3.swf', "histograma\nda distribuicao\nde acertos"));
 				});
 			});

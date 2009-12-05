@@ -36,14 +36,14 @@ package {
 			fonts[0].align		= align_;
 			fonts[0].bold		= bold_;
 			fonts[0].color		= Hexlay.color_front;
-			fonts[0].font		= 'Hexagram';
+			fonts[0].font		= 'SixteenSegments';	// 'Hexagram';
 			fonts[0].size		= size_;
 
 			fonts[1]			= new TextFormat();
 			fonts[1].align		= align_;
 			fonts[1].bold		= bold_;
 			fonts[1].color		= Hexlay.color_front;
-			fonts[1].font		= 'SixteenSegments';
+			fonts[1].font		= 'Hexagram';			//'SixteenSegments';
 			fonts[1].size		= size_;
 
 			antiAliasType		= AntiAliasType.ADVANCED;
@@ -54,7 +54,7 @@ package {
 			text				= str;
 			type				= type_;
 			width				= width_;
-			//height				= size_ * 4;
+			height				= size_ * 4;
 			wordWrap			= true;
 
 			if (type_ == TextFieldType.INPUT) {

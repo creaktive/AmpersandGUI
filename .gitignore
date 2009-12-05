@@ -3,5 +3,6 @@ Ampersand.swf
 Hexagram.ttf
 screens/*.png
 screens/*.swf
+*.airi
 *.bak
 *.sqlite
